@@ -1,6 +1,17 @@
 <?php
 namespace CMS\Template;
 
+/**
+ * Class Scaffolding
+ * @package CMS\Template
+ *
+ * Stores the template config
+ * and provides a cache for rendering
+ *
+ * Can be accessed anywhere by calling App::make('cms.helper');
+ *
+ */
+
 class Scaffolding
 {
     /**

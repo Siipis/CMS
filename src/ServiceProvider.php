@@ -50,12 +50,17 @@ class ServiceProvider extends ViewServiceProvider
         $this->mergeConfigFrom($configPath, 'cms');
     }
 
+    /**
+     * Allow quick access for helper classes
+     */
     protected function registerHelpers()
     {
+        // Return as a singleton to keep data in sync
         $this->app->singleton('cms.helper', function() {
             return new Helper;
         });
 
+        // Loads the template and config
         $this->app->bindIf('cms.loader.filesystem', function () {
             return new Loader(
                 $this->app['files'],
@@ -72,6 +77,7 @@ class ServiceProvider extends ViewServiceProvider
             true
         );
 
+        // Configures a Twigbridge view engine to suit the CMS
         $this->app->bindIf('cms.engine', function () {
             return new Engine(
                 $this->app['twig.compiler'],
@@ -88,6 +94,7 @@ class ServiceProvider extends ViewServiceProvider
      */
     protected function registerEnvironment()
     {
+        // Register as a Laravel view provider
         $this->app['view']->addExtension(
             $this->app['twig.extension'],
             'cms',
@@ -96,15 +103,17 @@ class ServiceProvider extends ViewServiceProvider
             }
         );
 
-
+        // Creates a custom Twig Environment
         $this->app->bindIf('cms', function() {
             $env = new CMS(
                 $this->app['cms.loader'],
                 $this->app['twig.options'],
                 $this->app
             );
-            
-            // Instantiate and add Twig extensions
+
+            /**
+             * Registers the Twig extensions
+             */
             $extensions = array_merge($this->app['twig.extensions'], [
                 'CMS\Extension\Core',
             ]);
@@ -132,6 +141,7 @@ class ServiceProvider extends ViewServiceProvider
             return $env;
         });
 
+        // Facade accessor
         $this->app->alias('cms', 'CMS\CMS');
     }
 
