@@ -1,6 +1,8 @@
 <?php
 namespace CMS\Node;
 
+use CMS_Helper as Helper;
+
 class StringNode extends \Twig_Node
 {
     public function __construct($line, $tag)
@@ -15,9 +17,7 @@ class StringNode extends \Twig_Node
         try {
             $template = $compiler->getFilename();
 
-            $helper = \App::make('cms.helper');
-
-            $string = $helper->getBufferKey($template, $this->tag);
+            $string = Helper::getBufferKey($template, $this->tag);
 
         } catch (\Exception $e) {
             $string = "[$this->tag]"; // display a placeholder

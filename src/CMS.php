@@ -9,21 +9,9 @@ use View;
 
 class CMS extends TwigBridge
 {
-    protected $helper;
-
     public function __construct(Twig_LoaderInterface $loader, $options = [], Application $app = null)
     {
         parent::__construct($loader, $options, $app);
-
-        $this->helper = App::make('cms.helper');
-    }
-
-    /**
-     * @return \CMS_Helper
-     */
-    public function getHelper()
-    {
-        return $this->helper;
     }
 
     /**

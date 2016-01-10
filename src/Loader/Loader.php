@@ -2,6 +2,7 @@
 namespace CMS\Loader;
 
 use App;
+use \CMS_Helper as Helper;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\ViewFinderInterface;
 use TwigBridge\Twig\Loader as BridgeLoader;
@@ -17,19 +18,15 @@ use YAML;
  */
 class Loader extends BridgeLoader
 {
-    /**
-     * Template helper
-     *
-     * @var \CMS_Helper
-     */
-    protected $helper;
+    protected $name;
+
+    protected $layout;
+
+    protected $content;
 
     public function __construct(Filesystem $files, ViewFinderInterface $finder, $extension = 'twig')
     {
         parent::__construct($files, $finder, $extension);
-
-        $this->helper = App::make('cms.helper');
-
     }
 
     /**
@@ -41,20 +38,21 @@ class Loader extends BridgeLoader
      */
     public function getSource($name)
     {
-        $source = parent::getSource($name);
+        $this->setName($name);
 
-        return $this->parseSource($name, $source);
+        $source = parent::getSource($name);
+        return $this->parseSource($source);
     }
 
-    /**
-     * Parses the raw source to fit Twig
-     *
-     * @param string $name
-     * @param string $source
-     * @return mixed|null|string
-     * @throws \Twig_Error_Loader
-     */
-    private function parseSource($name, $source)
+    /*
+    |--------------------------------------------------------------------------
+    | Source parsers
+    |--------------------------------------------------------------------------
+    |
+    | Parses the template contents and returns a Twig source code
+    |
+    */
+    private function parseSource($source)
     {
         $parts = explode('===', $source);
 
@@ -67,7 +65,7 @@ class Loader extends BridgeLoader
                 $source = $this->hasSourceOnly($parts);
                 break;
             case 2:
-                $source = $this->hasConfig($parts, $name);
+                $source = $this->hasConfig($parts);
                 break;
             default:
                 $source = null;
@@ -86,7 +84,11 @@ class Loader extends BridgeLoader
      */
     private function hasSourceOnly($parts)
     {
-        return trim($parts[0]);
+        $source = trim($parts[0]);
+
+        $this->setContent($source);
+
+        return $source;
     }
 
     /**
@@ -94,75 +96,183 @@ class Loader extends BridgeLoader
      * before returning the Twig template source
      *
      * @param array $parts
-     * @param string $name
      * @return string
      */
-    private function hasConfig($parts, $name)
+    private function hasConfig($parts)
     {
         $config = YAML::parse($parts[0]);
         $source = trim($parts[1]);
 
-        $h = $this->helper;
+        $this->setContent($source);
 
-        $h->setConfig($name, $config);
+        // Caches the template config
+        Helper::setConfig($this->getName(), $config);
 
-        if ($h->hasConfigKey($name, 'title'))
-        {
-            $h->setBufferKey($name, 'title', $h->getConfigKey($name, 'title'));
+        return $this
+            ->addLayout()
+            ->addTitle()
+            ->getContent();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Parser helpers
+    |--------------------------------------------------------------------------
+    |
+    | Handle config tags when necessary
+    |
+    */
+    protected function addTitle()
+    {
+        if ($this->configHas('title')) {
+            $this->buffer('title', true);
         }
 
-        if ($h->hasConfigKey($name, 'layout'))
-        {
-            $parentName = $h->getConfigKey($name, 'layout');
-            $parentName = secure_string($parentName);
+        return $this;
+    }
 
-            if ($h->hasBufferKey($parentName, 'page') == false) {
-                $h->setBufferKey($parentName, 'page', $name);
+    protected function addLayout()
+    {
+        if ($this->configHas('layout')) {
+            $name = $this->getName();
+            $source = $this->getContent();
+            $layout = secure_string($this->configGet('layout'));
+
+            $this->setLayout(config('cms.path.layouts') .'/'. $layout);
+
+            if ($this->bufferHas('page', true) == false) {
+                Helper::setBufferKey($layout, 'page', $name);
 
                 $source = $this->appendSyntax($source,
-                    "{% layout \"$parentName\" %}\n{% block cms_page %}");
+                    "{% layout \"$layout\" %}\n{% block cms_page %}");
                 $source = $this->prependSyntax($source,
                     "{% endblock cms_page %}");
             }
+
+            $this->setContent($source);
         }
 
-        return $source;
+        return $this;
     }
 
-    /**
-     * Replaces parts of the Twig source
-     *
-     * @param string $source
-     * @param string $replace
-     * @param string $with
-     * @return mixed
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Helper shortcut functions
+    |--------------------------------------------------------------------------
+    |
+    | See \CMS\Layout\Scaffolding for more
+    |
+    */
+    protected function configHas($key)
+    {
+        return Helper::hasConfigKey($this->getName(), $key);
+    }
+
+    protected function configGet($key)
+    {
+        return Helper::getConfigKey($this->getName(), $key);
+    }
+
+    protected function bufferHas($key, $withLayout = false)
+    {
+        $name = $withLayout ? $this->getLayout() : $this->getName();
+
+        return Helper::hasBufferKey($name, $key);
+    }
+
+    protected function buffer($key, $withLayout, $value = null)
+    {
+        $name = $this->getName();
+
+        // If no value is defined, assume it resides in the config
+        if (is_null($value)) {
+            $value = Helper::getConfigKey($name, $key);
+        }
+
+        if (is_null($value)) {
+            throw new \InvalidArgumentException("Cannot buffer an empty value.");
+        }
+
+        // If a layout is present, add the value to it's buffer instead
+        $name = $withLayout ? $this->getLayout() : $this->getName();
+
+        Helper::setBufferKey($name, $key, $value);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Syntax functions
+    |--------------------------------------------------------------------------
+    |
+    | Edits the Twig template source
+    |
+    */
+
     protected function replaceSyntax($source, $replace, $with)
     {
         return str_ireplace($replace, $with, $source);
     }
 
-    /**
-     * Appends code to the start of the Twig source
-     *
-     * @param string $source
-     * @param string $syntax
-     * @return string
-     */
     protected function appendSyntax($source, $syntax)
     {
         return $syntax . "\n" . $source;
     }
 
-    /**
-     * Prepends code to the end of the Twig source
-     *
-     * @param string $source
-     * @param string $syntax
-     * @return string
-     */
     protected function prependSyntax($source, $syntax)
     {
         return $source . "\n" . $syntax;
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Getters and setters
+    |--------------------------------------------------------------------------
+    |
+    | Various getters and setters to enable cleaner code
+    |
+    */
+
+    public function getName()
+    {
+        if (is_null($this->name)) {
+            throw new \UnexpectedValueException("No template name is set.");
+        }
+
+
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getLayout()
+    {
+        if (is_null($this->layout)) {
+            throw new \UnexpectedValueException("No layout name is set.");
+        }
+
+        return $this->layout;
+    }
+
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
+    }
+
+    public function getContent()
+    {
+        if (is_null($this->content)) {
+            throw new \UnexpectedValueException("No layout name is set.");
+        }
+
+        return $this->content;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
 }
