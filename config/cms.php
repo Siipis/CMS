@@ -17,7 +17,6 @@ return [
         |--------------------------------------------------------------------------
         |.
         */
-        'cache' => config('view.paths')[0] .'/cache',
 
     ],
 
@@ -31,25 +30,9 @@ return [
         |
         */
 
-        'layouts' => 'layout',
-        'pages' => 'pages',
-        'partials' => 'partials',
-        'menus' => 'menus',
-    ],
-
-    'extensions' => [
-
-        /*
-        |--------------------------------------------------------------------------
-        | Extensions
-        |--------------------------------------------------------------------------
-        |
-        | Enabled extensions.
-        |
-        |
-        */
-        'enabled' => [
-        ],
-
+        'layouts'   => 'layout',
+        'pages'     => 'pages',
+        'partials'  => 'partials',
+        'menus'     => 'menus',
     ],
 ];

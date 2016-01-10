@@ -24,8 +24,8 @@ class Core extends Twig_Extension
     public function getTokenParsers()
     {
         return [
+            new \CMS\Extension\Layout(),
             new \CMS\Extension\Menu(),
-            new \CMS\Extension\Page(),
             new \CMS\Extension\Partial(),
             new \CMS\Extension\Title(),
         ];

@@ -4,9 +4,9 @@ namespace CMS\Facade;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \CMS
+ * @see \CMS\Template\Scaffolding
  */
-class Cache extends Facade
+class Scaffolding extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -15,6 +15,6 @@ class Cache extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'cms.cache';
+        return 'cms.helper';
     }
 }

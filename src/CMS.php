@@ -1,72 +1,57 @@
 <?php
 namespace CMS;
 
-use CMS\Template\Template;
+use App;
+use Illuminate\Contracts\Foundation\Application;
+use TwigBridge\Bridge as TwigBridge;
+use Twig_LoaderInterface;
 use View;
 
-class CMS
+class CMS extends TwigBridge
 {
-    public function route($route)
-    {
-        if ($view = $this->getView($route))
-        {
-            $template = new Template($view);
+    protected $helper;
 
-            return $template->render();
-        }
-        else
-        {
-            abort(404);
-            return false;
-        }
+    public function __construct(Twig_LoaderInterface $loader, $options = [], Application $app = null)
+    {
+        parent::__construct($loader, $options, $app);
+
+        $this->helper = App::make('cms.helper');
     }
 
-    public function render($view)
+    public function getHelper()
     {
-        return $this->route($view);
+        return $this->helper;
     }
 
-    private function getView($route)
+    public function route($route, $isPage = true)
     {
-        $prefix = config('cms.path.pages');
-        $view = $this->parseNotation($route);
-
-        if (View::exists($prefix .'/'. $view)) {
-            return $view;
+        if ($view = $this->getViewName($route, $isPage))
+        {
+            return $this->render($view);
         }
 
-        if (View::exists($prefix .'/'. $view .'/main')) {
-            return $view .'/main';
-        }
-
+        abort(404);
         return false;
     }
 
-    /**
-     * Parses the dot notation
-     *
-     * @param $notation
-     * @return null|string
-     */
-    private function parseNotation($notation)
+    public function view($view, $isPage = true)
     {
-        $parsed = null;
-        $parts = explode('.', $notation);
+        return $this->route($view, $isPage);
+    }
 
-        foreach($parts as $i => $part) {
-            if ($part == config('twigbridge.twig.extension')) {
-                $parsed .= ".$part";
-                continue;
-            }
+    protected function getViewName($name, $isPage = true)
+    {
+        $folder = $isPage ? config('cms.path.pages') .'/' : '';
+        $view = $this->normalizeName($name);
 
-            if ($i > 0) {
-                $parsed .= "/$part";
-                continue;
-            }
-
-            $parsed = $part;
+        if (View::exists($path = $folder . $view)) {
+            return $path;
         }
 
-        return $parsed;
+        if (View::exists($path .= '/main')) {
+            return $path;
+        }
+
+        return false;
     }
 }
