@@ -17,7 +17,6 @@ return [
         |--------------------------------------------------------------------------
         |.
         */
-
     ],
 
     'path' => [
@@ -34,5 +33,20 @@ return [
         'pages'     => 'pages',
         'partials'  => 'partials',
         'menus'     => 'menus',
+    ],
+
+    'parsers' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Optional parsers
+        |--------------------------------------------------------------------------
+        |
+        | Source parsers used when loading the template.
+        | NOTE: The parsers are ran in order of declaration.
+        |
+        */
+
+        'CMS\Parser\SyntaxParser',
+        'CMS\Parser\RequestParser',
     ],
 ];

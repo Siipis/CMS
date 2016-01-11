@@ -3,6 +3,7 @@ namespace CMS;
 
 use TwigBridge\Engine\Twig as Engine;
 use CMS\Loader\Loader;
+use CMS\Parser\Parser;
 use CMS\Template\Scaffolding as Helper;
 use Illuminate\View\ViewServiceProvider;
 
@@ -77,6 +78,13 @@ class ServiceProvider extends ViewServiceProvider
             true
         );
 
+        $this->app->bindIf('cms.parser', function() {
+            return new Parser([
+                'CMS\Parser\ConfigParser',
+                'CMS\Parser\SourceParser',
+            ]);
+        });
+
         // Configures a Twigbridge view engine to suit the CMS
         $this->app->bindIf('cms.engine', function () {
             return new Engine(
@@ -104,7 +112,7 @@ class ServiceProvider extends ViewServiceProvider
         );
 
         // Creates a custom Twig Environment
-        $this->app->bindIf('cms', function() {
+        $this->app->singleton('cms', function() {
             $env = new CMS(
                 $this->app['cms.loader'],
                 $this->app['twig.options'],
@@ -140,9 +148,6 @@ class ServiceProvider extends ViewServiceProvider
 
             return $env;
         });
-
-        // Facade accessor
-        $this->app->alias('cms', 'CMS\CMS');
     }
 
     /**
@@ -156,6 +161,7 @@ class ServiceProvider extends ViewServiceProvider
             'cms.engine',
             'cms.helper',
             'cms.loader',
+            'cms.parser',
             'cms',
         ];
     }

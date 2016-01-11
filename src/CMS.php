@@ -9,9 +9,13 @@ use View;
 
 class CMS extends TwigBridge
 {
+    protected $routeCache;
+
     public function __construct(Twig_LoaderInterface $loader, $options = [], Application $app = null)
     {
         parent::__construct($loader, $options, $app);
+
+        $this->routeCache = [];
     }
 
     /**
@@ -28,7 +32,6 @@ class CMS extends TwigBridge
             return $this->render($view);
         }
 
-        abort(404);
         return false;
     }
 
@@ -54,7 +57,6 @@ class CMS extends TwigBridge
             return parent::render($view, $context);
         }
 
-        abort(404);
         return false;
     }
 
@@ -67,18 +69,52 @@ class CMS extends TwigBridge
      */
     protected function getViewName($name, $isPage = true)
     {
-        $folder = $isPage ? config('cms.path.pages') .'/' : '';
+        $pageDir = config('cms.path.pages') .'/';
 
-        $view = $this->normalizeName($name);
-
-        if (View::exists($path = $folder . $view)) {
-            return $path;
+        if (!$isPage || starts_with($name, $pageDir)) {
+            return $name;
         }
 
-        if (View::exists($path = $folder . $view .'/main')) {
-            return $path;
+        if ($this->isCached($name)) {
+            return $this->getCached($name);
         }
 
+        if (View::exists($route = $pageDir . $name)) {
+            $this->setCached($name, $route);
+
+            return $route;
+        }
+
+        if (View::exists($route = $pageDir . $name .'/main')) {
+            $this->setCached($name, $route);
+
+            return $route;
+        }
+
+        abort(404);
         return false;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | View cache
+    |--------------------------------------------------------------------------
+    |
+    | For faster routing and to avoid misrouting
+    |
+    */
+    protected function isCached($name)
+    {
+        return isset($this->routeCache[$name]);
+    }
+
+    protected function getCached($name)
+    {
+        return $this->routeCache[$name];
+    }
+
+    protected function setCached($name, $route)
+    {
+        $this->routeCache[$name] = $route;
     }
 }
