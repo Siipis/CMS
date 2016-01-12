@@ -129,4 +129,9 @@ class Parser
 
         Helper::setBufferKey($name, $key, $value);
     }
+
+    public function setAttribute($key, $value)
+    {
+        Helper::setAttribute($this->getName(), $key, $value);
+    }
 }

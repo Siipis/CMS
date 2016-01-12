@@ -106,7 +106,7 @@ class Scaffolding
     public function getAttributes($template)
     {
         if (!$this->exists($this->attributes, $template)) {
-            return null;
+            return [];
         }
 
         return $this->attributes[$template];
@@ -118,7 +118,7 @@ class Scaffolding
             throw new \InvalidArgumentException;
         }
 
-        $this->configs[$template] = $attr;
+        $this->attributes[$template] = $attr;
     }
 
     public function getAttribute($template, $key)
@@ -128,6 +128,11 @@ class Scaffolding
         }
 
         return $this->attributes[$template][$key];
+    }
+
+    public function setAttribute($template, $key, $value)
+    {
+        $this->attributes[$template][$key] = $value;
     }
 
     public function hasAttribute($template, $key)

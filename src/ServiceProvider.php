@@ -112,12 +112,14 @@ class ServiceProvider extends ViewServiceProvider
         );
 
         // Creates a custom Twig Environment
-        $this->app->singleton('cms', function() {
+        $this->app->bindIf('cms', function() {
             $env = new CMS(
                 $this->app['cms.loader'],
                 $this->app['twig.options'],
                 $this->app
             );
+
+            $env->setBaseTemplateClass('CMS\Template\Template');
 
             /**
              * Registers the Twig extensions

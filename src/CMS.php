@@ -3,6 +3,7 @@ namespace CMS;
 
 use App;
 use Illuminate\Contracts\Foundation\Application;
+use Twig_NodeInterface;
 use TwigBridge\Bridge as TwigBridge;
 use Twig_LoaderInterface;
 use View;
@@ -25,22 +26,11 @@ class CMS extends TwigBridge
      * @param bool $isPage
      * @return bool|string
      */
-    public function route($route, $isPage = true)
+    public function view($route, $isPage = true)
     {
-        if ($view = $this->getViewName($route, $isPage))
-        {
-            return $this->render($view);
-        }
+        $view = $this->getViewName($route, $isPage);
 
-        return false;
-    }
-
-    /**
-     * Alias for route()
-     */
-    public function view($view, $isPage = true)
-    {
-        return $this->route($view, $isPage);
+        return $this->render($view);
     }
 
     /**
@@ -52,12 +42,9 @@ class CMS extends TwigBridge
      */
     public function render($name, array $context = array())
     {
-        if ($view = $this->getViewName($name))
-        {
-            return parent::render($view, $context);
-        }
+        $view = $this->getViewName($name);
 
-        return false;
+        return parent::render($view, $context);
     }
 
     /**
@@ -100,7 +87,7 @@ class CMS extends TwigBridge
     | View cache
     |--------------------------------------------------------------------------
     |
-    | For faster routing and to avoid misrouting
+    | For faster routing
     |
     */
     protected function isCached($name)

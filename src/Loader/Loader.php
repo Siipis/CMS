@@ -1,7 +1,6 @@
 <?php
 namespace CMS\Loader;
 
-use App;
 use CMS_Parser as Parser;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\ViewFinderInterface;
