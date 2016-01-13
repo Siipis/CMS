@@ -3,7 +3,7 @@ namespace CMS;
 
 use App;
 use Illuminate\Contracts\Foundation\Application;
-use Twig_NodeInterface;
+use Illuminate\Contracts\View\Factory as ViewFactory;
 use TwigBridge\Bridge as TwigBridge;
 use Twig_LoaderInterface;
 use View;
@@ -20,17 +20,22 @@ class CMS extends TwigBridge
     }
 
     /**
-     * Renders a route
+     * Views a page
      *
-     * @param $route
-     * @param bool $isPage
-     * @return bool|string
+     * @param string $view
+     * @param array $data
+     * @param array $mergeData
+     * @return ViewFactory|\Illuminate\Contracts\View\View
      */
-    public function view($route, $isPage = true)
+    public function view($view, $data = [], $mergeData = [])
     {
-        $view = $this->getViewName($route, $isPage);
+        $factory = app(ViewFactory::class);
 
-        return $this->render($view);
+        if (func_num_args() === 0) {
+            return $factory;
+        }
+
+        return $factory->make($this->getViewName($view), $data, $mergeData);
     }
 
     /**
@@ -42,7 +47,7 @@ class CMS extends TwigBridge
      */
     public function render($name, array $context = array())
     {
-        $view = $this->getViewName($name);
+        $view = $this->getViewName($name, false);
 
         return parent::render($view, $context);
     }
@@ -56,7 +61,7 @@ class CMS extends TwigBridge
      */
     protected function getViewName($name, $isPage = true)
     {
-        $pageDir = config('cms.path.pages') .'/';
+        $pageDir = config('cms.path.pages') . '/';
 
         if (!$isPage || starts_with($name, $pageDir)) {
             return $name;
@@ -72,7 +77,7 @@ class CMS extends TwigBridge
             return $route;
         }
 
-        if (View::exists($route = $pageDir . $name .'/main')) {
+        if (View::exists($route = $pageDir . $name . '/main')) {
             $this->setCached($name, $route);
 
             return $route;
