@@ -105,7 +105,7 @@ class ServiceProvider extends ViewServiceProvider
         // Register as a Laravel view provider
         $this->app['view']->addExtension(
             $this->app['twig.extension'],
-            'cms',
+            'twig',
             function () {
                 return $this->app['cms.engine'];
             }

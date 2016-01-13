@@ -17,7 +17,11 @@ class StringNode extends \Twig_Node
         try {
             $template = $compiler->getFilename();
 
-            $string = Helper::getBufferKey($template, $this->tag);
+            if (Helper::hasBufferKey($template, $this->tag)) {
+                $string = Helper::getBufferKey($template, $this->tag);
+            } else {
+                $string = "[$this->tag]"; // display a placeholder
+            }
 
         } catch (\Exception $e) {
             $string = "[$this->tag]"; // display a placeholder

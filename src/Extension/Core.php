@@ -15,6 +15,7 @@ class Core extends Twig_Extension
     {
         return [
             new \CMS\Extension\Menu(),
+            new \CMS\Extension\Page(),
             new \CMS\Extension\Partial(),
             new \CMS\Extension\Title(),
 
