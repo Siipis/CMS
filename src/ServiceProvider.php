@@ -5,7 +5,8 @@ use TwigBridge\Engine\Twig as Engine;
 use CMS\Loader\Loader;
 use CMS\Parser\Parser;
 use CMS\Template\Scaffolding as Helper;
-use Illuminate\View\ViewServiceProvider;
+use TwigBridge\ServiceProvider as ViewServiceProvider;
+use TwigBridge\Engine\Compiler;
 
 /**
  * Bootstrap CMS.
@@ -25,8 +26,9 @@ class ServiceProvider extends ViewServiceProvider
      */
     public function register()
     {
+        parent::register();
+
         $this->registerHelpers();
-        $this->registerEnvironment();
     }
 
     /**
@@ -34,7 +36,7 @@ class ServiceProvider extends ViewServiceProvider
      */
     public function boot()
     {
-        $this->loadConfiguration();
+        parent::boot();
     }
 
     /**
@@ -44,6 +46,8 @@ class ServiceProvider extends ViewServiceProvider
      */
     protected function loadConfiguration()
     {
+        parent::loadConfiguration();
+
         $configPath = __DIR__ . '/../config/cms.php';
 
         $this->publishes([$configPath => config_path('cms.php')], 'config');
@@ -51,15 +55,21 @@ class ServiceProvider extends ViewServiceProvider
         $this->mergeConfigFrom($configPath, 'cms');
     }
 
-    /**
-     * Allow quick access for helper classes
-     */
-    protected function registerHelpers()
+    protected function registerExtension()
     {
-        // Return as a singleton to keep data in sync
-        $this->app->singleton('cms.helper', function() {
-            return new Helper;
-        });
+        // Register as a Laravel view provider
+        $this->app['view']->addExtension(
+            $this->app['twig.extension'],
+            'twig',
+            function () {
+                return $this->app['cms.engine'];
+            }
+        );
+    }
+
+    protected function registerLoaders()
+    {
+        parent::registerLoaders();
 
         // Loads the template and config
         $this->app->bindIf('cms.loader.filesystem', function () {
@@ -71,48 +81,20 @@ class ServiceProvider extends ViewServiceProvider
         });
 
         $this->app->bindIf('cms.loader', function () {
-                return new \Twig_Loader_Chain([
-                    $this->app['cms.loader.filesystem'],
-                ]);
-            },
+            return new \Twig_Loader_Chain([
+                $this->app['cms.loader.filesystem'],
+            ]);
+        },
             true
         );
-
-        $this->app->bindIf('cms.parser', function() {
-            return new Parser([
-                'CMS\Parser\ConfigParser',
-                'CMS\Parser\SourceParser',
-            ]);
-        });
-
-        // Configures a Twigbridge view engine to suit the CMS
-        $this->app->bindIf('cms.engine', function () {
-            return new Engine(
-                $this->app['twig.compiler'],
-                $this->app['cms.loader.filesystem'],
-                $this->app['config']->get('twigbridge.twig.globals', [])
-            );
-        });
     }
 
-    /**
-     * Register CMS environment
-     *
-     * @return void
-     */
-    protected function registerEnvironment()
+    public function registerEngine()
     {
-        // Register as a Laravel view provider
-        $this->app['view']->addExtension(
-            $this->app['twig.extension'],
-            'twig',
-            function () {
-                return $this->app['cms.engine'];
-            }
-        );
+        parent::registerEngine();
 
         // Creates a custom Twig Environment
-        $this->app->bindIf('cms', function() {
+        $this->app->bindIf('cms', function () {
             $env = new CMS(
                 $this->app['cms.loader'],
                 $this->app['twig.options'],
@@ -150,6 +132,37 @@ class ServiceProvider extends ViewServiceProvider
 
             return $env;
         });
+
+        $this->app->bindIf('cms.compiler', function () {
+            return new Compiler($this->app['cms']);
+        });
+
+        // Configures a Twigbridge view engine to suit the CMS
+        $this->app->bindIf('cms.engine', function () {
+            return new Engine(
+                $this->app['cms.compiler'],
+                $this->app['cms.loader.filesystem'],
+                $this->app['config']->get('twigbridge.twig.globals', [])
+            );
+        });
+    }
+
+    /**
+     * Allow quick access for helper classes
+     */
+    protected function registerHelpers()
+    {
+        // Return as a singleton to keep data in sync
+        $this->app->singleton('cms.helper', function () {
+            return new Helper;
+        });
+
+        $this->app->bindIf('cms.parser', function () {
+            return new Parser([
+                'CMS\Parser\ConfigParser',
+                'CMS\Parser\SourceParser',
+            ]);
+        });
     }
 
     /**
@@ -160,9 +173,11 @@ class ServiceProvider extends ViewServiceProvider
     public function provides()
     {
         return [
+            'cms.compiler',
             'cms.engine',
             'cms.helper',
             'cms.loader',
+            'cms.loader.filesystem',
             'cms.parser',
             'cms',
         ];
