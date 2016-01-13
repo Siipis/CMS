@@ -149,6 +149,11 @@ class Scaffolding
         $this->buffer[$template] = $buffer;
     }
 
+    public function hasBuffer($template)
+    {
+        return isset($this->buffer[$template]);
+    }
+
     public function getBufferKey($template, $key)
     {
         if (!$this->exists($this->buffer, $template, $key)) {

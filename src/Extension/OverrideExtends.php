@@ -21,16 +21,18 @@ class OverrideExtends extends \Twig_TokenParser
         }
 
         $this->parser->setParent($this->parser->getExpressionParser()->parseExpression());
-
-        $parentName = $this->parser->getParent()->getAttribute('value');
-        $name = $this->parser->getFilename();
-
-        // If the parent has no buffer values, transfer them from the child template
-        if (is_null(Helper::getBuffer($parentName))) {
-            Helper::setBuffer($parentName, Helper::getBuffer($name));
-        }
-
         $this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
+
+        if (Helper::hasBuffer($this->parser->getFilename()))
+        {
+            $parentName = $this->parser->getParent()->getAttribute('value');
+            $name = $this->parser->getFilename();
+
+            // If the parent has no buffer values, transfer them from the child template
+            if (is_null(Helper::getBuffer($parentName))) {
+                Helper::setBuffer($parentName, Helper::getBuffer($name));
+            }
+        }
     }
 
     public function getTag()
