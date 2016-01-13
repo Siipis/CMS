@@ -14,26 +14,8 @@ namespace CMS\Template;
 
 class Scaffolding
 {
-    /**
-     * Values to be rendered by Twig_Nodes
-     *
-     * @var array
-     */
-
     protected $buffer;
-
-    /**
-     * Template configurations
-     *
-     * @var array
-     */
     protected $configs;
-
-    /**
-     * Template variables
-     *
-     * @var array
-     */
     protected $attributes;
 
     public function __construct()
@@ -156,6 +138,15 @@ class Scaffolding
         }
 
         return $this->buffer[$template];
+    }
+
+    public function setBuffer($template, $buffer)
+    {
+        if (!is_array($buffer)) {
+            throw new \InvalidArgumentException;
+        }
+
+        $this->buffer[$template] = $buffer;
     }
 
     public function getBufferKey($template, $key)

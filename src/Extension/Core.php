@@ -17,6 +17,8 @@ class Core extends Twig_Extension
             new \CMS\Extension\Menu(),
             new \CMS\Extension\Partial(),
             new \CMS\Extension\Title(),
+
+            new \CMS\Extension\OverrideExtends(),
         ];
     }
 }
