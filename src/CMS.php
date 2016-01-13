@@ -4,6 +4,7 @@ namespace CMS;
 use App;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Database\Eloquent\Builder;
 use TwigBridge\Bridge as TwigBridge;
 use Twig_LoaderInterface;
 use View;
@@ -31,10 +32,6 @@ class CMS extends TwigBridge
     {
         $factory = app(ViewFactory::class);
 
-        if (func_num_args() === 0) {
-            return $factory;
-        }
-
         return $factory->make($this->getViewName($view), $data, $mergeData);
     }
 
@@ -59,7 +56,7 @@ class CMS extends TwigBridge
      * @param bool $isPage
      * @return bool|string
      */
-    protected function getViewName($name, $isPage = true)
+    public function getViewName($name, $isPage = true)
     {
         $pageDir = config('cms.path.pages') . '/';
 
@@ -85,6 +82,16 @@ class CMS extends TwigBridge
 
         abort(404);
         return false;
+    }
+
+    private function resolveModel($model)
+    {
+        if ($model instanceof Builder)
+        {
+            return $model->get();
+        }
+
+        return $model;
     }
 
     /*
