@@ -19,6 +19,9 @@ class SyntaxParser implements SubParserInterface
          */
         $source = $this->replaceSyntax($source, "{% page %}", "{% block cms_page %}{% endblock %}");
 
+        /*
+         * Add layout
+         */
         if ($this->parent->configHas('layout')) {
             $layout = $this->parent->getLayout();
 
@@ -26,6 +29,15 @@ class SyntaxParser implements SubParserInterface
                 "{% extends \"$layout\" %}\n{% block cms_page %}");
             $source = $this->prependSyntax($source,
                 "{% endblock cms_page %}");
+        }
+
+        /*
+         * Add title
+         */
+        if ($this->parent->bufferHas('title')) {
+            $title = $this->parent->bufferGet('title');
+
+            $source = $this->replaceSyntax($source, "{% title %}", $title);
         }
 
         return $source;

@@ -94,21 +94,35 @@ class Parser
     | See \CMS\Layout\Scaffolding for more
     |
     */
-    public function configHas($key)
+
+    // Config
+    public function configHas($key, $withLayout = false)
     {
-        return Helper::hasConfigKey($this->getName(), $key);
+        $name = $withLayout ? $this->getLayout() : $this->getName();
+
+        return Helper::hasConfigKey($name, $key);
     }
 
-    public function configGet($key)
+    public function configGet($key, $withLayout = false)
     {
-        return Helper::getConfigKey($this->getName(), $key);
+        $name = $withLayout ? $this->getLayout() : $this->getName();
+
+        return Helper::getConfigKey($name, $key);
     }
 
+    // Buffer
     public function bufferHas($key, $withLayout = false)
     {
         $name = $withLayout ? $this->getLayout() : $this->getName();
 
         return Helper::hasBufferKey($name, $key);
+    }
+
+    public function bufferGet($key, $withLayout = false)
+    {
+        $name = $withLayout ? $this->getLayout() : $this->getName();
+
+        return Helper::getBufferKey($name, $key);
     }
 
     public function buffer($key, $withLayout, $value = null)
@@ -130,6 +144,7 @@ class Parser
         Helper::setBufferKey($name, $key, $value);
     }
 
+    // Attribute
     public function setAttribute($key, $value)
     {
         Helper::setAttribute($this->getName(), $key, $value);
