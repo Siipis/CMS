@@ -70,8 +70,14 @@ class ConfigParser implements SubParserInterface
         if ($this->parent->configHas('with')) {
             $attributes = $this->parent->getConfig('with');
             $old = $this->parent->attributes();
+            $attr = [];
 
-            $this->parent->setAttributes(array_merge($old, $attributes));
+            foreach ($attributes as $array)
+            {
+                $attr = array_merge($attr, $array);
+            }
+
+            $this->parent->setAttributes(array_merge($old, $attr));
         }
 
         return $this;
