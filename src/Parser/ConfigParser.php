@@ -24,8 +24,10 @@ class ConfigParser implements SubParserInterface
             Helper::setConfig($this->parent->getName(), $config);
 
             $this
+                ->addAttributes()
                 ->addLayout()
-                ->addTitle();
+                ->addTitle()
+            ;
 
         }
 
@@ -53,11 +55,23 @@ class ConfigParser implements SubParserInterface
     {
         if ($this->parent->configHas('layout')) {
             $name = $this->parent->getName();
-            $layout = secure_string(config('cms.path.layouts') .'/'. $this->parent->configGet('layout'));
+            $layout = secure_string(config('cms.path.layouts') .'/'. $this->parent->getConfig('layout'));
 
             $this->parent->setLayout($layout);
 
             Helper::setBufferKey($layout, 'page', $name);
+        }
+
+        return $this;
+    }
+
+    protected function addAttributes()
+    {
+        if ($this->parent->configHas('with')) {
+            $attributes = $this->parent->getConfig('with');
+            $old = $this->parent->attributes();
+
+            $this->parent->setAttributes(array_merge($old, $attributes));
         }
 
         return $this;

@@ -103,11 +103,16 @@ class Parser
         return Helper::hasConfigKey($name, $key);
     }
 
-    public function configGet($key, $withLayout = false)
+    public function getConfig($key, $withLayout = false)
     {
         $name = $withLayout ? $this->getLayout() : $this->getName();
 
         return Helper::getConfigKey($name, $key);
+    }
+
+    public function setConfig($key, $value)
+    {
+        Helper::setConfigKey($this->getName(), $key, $value);
     }
 
     // Buffer
@@ -118,11 +123,16 @@ class Parser
         return Helper::hasBufferKey($name, $key);
     }
 
-    public function bufferGet($key, $withLayout = false)
+    public function getBuffer($key, $withLayout = false)
     {
         $name = $withLayout ? $this->getLayout() : $this->getName();
 
         return Helper::getBufferKey($name, $key);
+    }
+
+    public function setBuffer($key, $value)
+    {
+        return Helper::setBufferKey($this->getName(), $key, $value);
     }
 
     public function buffer($key, $withLayout, $value = null)
@@ -145,6 +155,16 @@ class Parser
     }
 
     // Attribute
+    public function attributes()
+    {
+        return Helper::getAttributes($this->getName());
+    }
+
+    public function setAttributes($attr)
+    {
+        Helper::setAttributes($this->getName(), $attr);
+    }
+
     public function setAttribute($key, $value)
     {
         Helper::setAttribute($this->getName(), $key, $value);

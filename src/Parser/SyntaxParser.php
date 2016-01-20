@@ -35,7 +35,7 @@ class SyntaxParser implements SubParserInterface
          * Add title
          */
         if ($this->parent->bufferHas('title')) {
-            $title = $this->parent->bufferGet('title');
+            $title = $this->parent->getBuffer('title');
 
             $source = $this->replaceSyntax($source, "{% title %}", $title);
         }

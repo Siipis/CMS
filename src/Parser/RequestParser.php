@@ -27,7 +27,7 @@ class RequestParser implements SubParserInterface
     public function parse($source)
     {
         if ($this->parent->configHas('request')) {
-            $requests = $this->parent->configGet('request');
+            $requests = $this->parent->getConfig('request');
 
             // Compile each request line into a Request object
             $run = [];
