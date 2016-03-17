@@ -9,7 +9,6 @@
  * Configuration options for CMS.
  */
 return [
-
     'path' => [
         /*
         |--------------------------------------------------------------------------
@@ -24,6 +23,17 @@ return [
         'pages'     => 'pages',
         'partials'  => 'partials',
         'menus'     => 'menus',
+
+        /*
+        |--------------------------------------------------------------------------
+        | Class paths
+        |--------------------------------------------------------------------------
+        |
+        | Paths for class dependencies
+        |
+        */
+        'data'     => app_path('CMS/Data'),
+
     ],
 
     'parsers' => [
@@ -38,21 +48,7 @@ return [
         */
 
         'CMS\Parser\SyntaxParser',
-        'CMS\Parser\RequestParser',
+        'CMS\Parser\DataParser',
     ],
 
-    'requests' => [
-        'strict_syntax' => true,
-
-        //
-        'requestable' => [
-            'domain',
-            'user',
-        ],
-
-        'scopes' => [
-            'all',
-            '* = ?',
-        ]
-    ]
 ];

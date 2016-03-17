@@ -4,15 +4,8 @@ namespace CMS\Parser;
 use CMS_Helper as Helper;
 use YAML;
 
-class ConfigParser implements SubParserInterface
+class ConfigParser extends SubParser
 {
-    protected $parent;
-
-    public function __construct(Parser $parent)
-    {
-        $this->parent = $parent;
-    }
-
     public function parse($source)
     {
         $parts = $this->parent->split($source);

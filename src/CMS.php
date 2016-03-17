@@ -84,16 +84,6 @@ class CMS extends TwigBridge
         return false;
     }
 
-    private function resolveModel($model)
-    {
-        if ($model instanceof Builder)
-        {
-            return $model->get();
-        }
-
-        return $model;
-    }
-
     /*
     |--------------------------------------------------------------------------
     | View cache

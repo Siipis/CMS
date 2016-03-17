@@ -3,15 +3,8 @@
 namespace CMS\Parser;
 
 
-class SyntaxParser implements SubParserInterface
+class SyntaxParser extends SubParser
 {
-    protected $parent;
-
-    public function __construct(Parser $parent)
-    {
-        $this->parent = $parent;
-    }
-
     public function parse($source)
     {
         /*

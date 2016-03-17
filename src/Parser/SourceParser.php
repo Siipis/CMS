@@ -2,15 +2,8 @@
 namespace CMS\Parser;
 
 
-class SourceParser implements SubParserInterface
+class SourceParser extends SubParser
 {
-    protected $parent;
-
-    public function __construct(Parser $parent)
-    {
-        $this->parent = $parent;
-    }
-
     public function parse($source)
     {
         $split = $this->parent->split($source);
