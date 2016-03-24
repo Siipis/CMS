@@ -1,0 +1,34 @@
+<?php
+
+
+namespace App\CMS\Data;
+
+use CMS\Data\DataProvider;
+
+class DummyClass extends DataProvider
+{
+    /**
+     * @inheritDoc
+     */
+    public function dataAll()
+    {
+        //
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function dataOne($id)
+    {
+        //
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAccessor()
+    {
+        //
+    }
+
+}

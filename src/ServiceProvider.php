@@ -29,6 +29,7 @@ class ServiceProvider extends ViewServiceProvider
         parent::register();
 
         $this->registerHelpers();
+        $this->registerConsole();
     }
 
     /**
@@ -37,6 +38,10 @@ class ServiceProvider extends ViewServiceProvider
     public function boot()
     {
         parent::boot();
+
+        $this->publishes([
+            __DIR__.'/../config/cms.php' => config_path('cms.php'),
+        ]);
     }
 
     /**
@@ -163,6 +168,20 @@ class ServiceProvider extends ViewServiceProvider
                 'CMS\Parser\SourceParser',
             ]);
         });
+    }
+
+    /**
+     * Registers Artisan console commands
+     */
+    protected function registerConsole()
+    {
+        $this->app->bindIf('command.make.data', function () {
+            return new Console\MakeDataProvider($this->app['files'], $this->app['composer']);
+        });
+
+        $this->commands(
+            'command.make.data'
+        );
     }
 
     /**
