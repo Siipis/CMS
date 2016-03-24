@@ -6,7 +6,7 @@ Install using `composer require siipis/cms`
 ## Known issues
 Template caching causes problems with page configuration. You can either regularly clear the cache by running the console command `twig:clean` or by disabling the cache altogether.
 
-Set `VIEW_CACHE=false` in the `.env` file to disable caching.
+Set `'cache' => false,` in the `twigbridge.php` config file to disable caching.
 
 # Usage
 ## Service provider & Facade
