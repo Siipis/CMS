@@ -1,10 +1,10 @@
 <?php
 namespace Siipis\CMS;
 
-use TwigBridge\Engine\Twig as Engine;
 use Siipis\CMS\Loader\Loader;
 use Siipis\CMS\Parser\Parser;
 use Siipis\CMS\Template\Scaffolding as Helper;
+use TwigBridge\Engine\Twig as Engine;
 use TwigBridge\ServiceProvider as ViewServiceProvider;
 use TwigBridge\Engine\Compiler;
 
@@ -15,7 +15,7 @@ use TwigBridge\Engine\Compiler;
  *
  * <code>
  *     'providers' => [
- *         'CMS\ServiceProvider'
+ *         'Siipis\CMS\ServiceProvider'
  *     ];
  * </code>
  */
@@ -106,13 +106,13 @@ class ServiceProvider extends ViewServiceProvider
                 $this->app
             );
 
-            $env->setBaseTemplateClass('CMS\Template\Template');
+            $env->setBaseTemplateClass(\Siipis\CMS\Template\Template::class);
 
             /**
              * Registers the Twig extensions
              */
             $extensions = array_merge($this->app['twig.extensions'], [
-                'CMS\Extension\Core',
+                \Siipis\CMS\Extension\Core::class,
             ]);
 
             foreach ($extensions as $extension) {
@@ -164,8 +164,8 @@ class ServiceProvider extends ViewServiceProvider
 
         $this->app->bindIf('cms.parser', function () {
             return new Parser([
-                'CMS\Parser\ConfigParser',
-                'CMS\Parser\SourceParser',
+                \Siipis\CMS\Parser\ConfigParser::class,
+                \Siipis\CMS\Parser\SourceParser::class,
             ]);
         });
     }

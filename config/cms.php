@@ -47,8 +47,8 @@ return [
         |
         */
 
-        'CMS\Parser\SyntaxParser',
-        'CMS\Parser\DataParser',
+        Siipis\CMS\Parser\SyntaxParser::class,
+        Siipis\CMS\Parser\DataParser::class,
     ],
 
 ];
