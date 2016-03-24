@@ -35,6 +35,12 @@ class ConfigParser extends SubParser
     | Handle config tags when necessary
     |
     */
+
+    /**
+     * Buffers the title
+     *
+     * @return $this
+     */
     protected function addTitle()
     {
         if ($this->parent->configHas('title')) {
@@ -44,6 +50,11 @@ class ConfigParser extends SubParser
         return $this;
     }
 
+    /**
+     * Buffers the layout
+     *
+     * @return $this
+     */
     protected function addLayout()
     {
         if ($this->parent->configHas('layout')) {
@@ -58,6 +69,11 @@ class ConfigParser extends SubParser
         return $this;
     }
 
+    /**
+     * Buffers the attributes
+     *
+     * @return $this
+     */
     protected function addAttributes()
     {
         if ($this->parent->configHas('with')) {
