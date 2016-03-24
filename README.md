@@ -13,7 +13,7 @@ Providers:
 Aliases:
     
     'Twig'      => TwigBridge\Facade\Twig::class,
-    'YAML'      => \Symfony\Component\Yaml\Yaml::class,
+    'YAML'      => Symfony\Component\Yaml\Yaml::class,
      
     'CMS'       => CMS\Facade\CMS::class,
     'CMS_Helper'=> CMS\Facade\Scaffolding::class,
