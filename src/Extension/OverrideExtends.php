@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Extension;
+namespace Siipis\CMS\Extension;
 
 /**
  * Override \Twig_TokenParser_Extends

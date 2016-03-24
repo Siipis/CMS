@@ -1,5 +1,5 @@
 <?php
-namespace CMS;
+namespace Siipis\CMS;
 
 use App;
 use Illuminate\Contracts\Foundation\Application;

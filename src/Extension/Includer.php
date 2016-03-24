@@ -1,7 +1,7 @@
 <?php
-namespace CMS\Extension;
+namespace Siipis\CMS\Extension;
 
-use CMS\Node\IncludeNode;
+use Siipis\CMS\Node\IncludeNode;
 
 abstract class Includer extends \Twig_TokenParser
 {

@@ -1,10 +1,10 @@
 <?php
-namespace CMS;
+namespace Siipis\CMS;
 
 use TwigBridge\Engine\Twig as Engine;
-use CMS\Loader\Loader;
-use CMS\Parser\Parser;
-use CMS\Template\Scaffolding as Helper;
+use Siipis\CMS\Loader\Loader;
+use Siipis\CMS\Parser\Parser;
+use Siipis\CMS\Template\Scaffolding as Helper;
 use TwigBridge\ServiceProvider as ViewServiceProvider;
 use TwigBridge\Engine\Compiler;
 

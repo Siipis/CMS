@@ -1,7 +1,7 @@
 <?php
 
 
-namespace CMS\Data;
+namespace Siipis\CMS\Data;
 
 
 abstract class DataProvider

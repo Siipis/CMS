@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Template;
+namespace Siipis\CMS\Template;
 
 /**
  * Class Scaffolding

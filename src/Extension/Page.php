@@ -1,7 +1,7 @@
 <?php
-namespace CMS\Extension;
+namespace Siipis\CMS\Extension;
 
-use CMS\Node\StringNode;
+use Siipis\CMS\Node\StringNode;
 use Twig_Token;
 use Twig_TokenParser;
 

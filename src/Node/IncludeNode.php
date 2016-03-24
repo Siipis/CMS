@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Node;
+namespace Siipis\CMS\Node;
 
 class IncludeNode extends \Twig_Node
 {

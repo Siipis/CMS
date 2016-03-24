@@ -3,7 +3,7 @@
 
 namespace App\CMS\Data;
 
-use CMS\Data\DataProvider;
+use Siipis\CMS\Data\DataProvider;
 
 class DummyClass extends DataProvider
 {

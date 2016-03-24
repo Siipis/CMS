@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Extension;
+namespace Siipis\CMS\Extension;
 
 class Partial extends Includer
 {

@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Parser;
+namespace Siipis\CMS\Parser;
 
 
 class SourceParser extends SubParser

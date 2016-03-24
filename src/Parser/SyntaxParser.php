@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\Parser;
+namespace Siipis\CMS\Parser;
 
 
 class SyntaxParser extends SubParser

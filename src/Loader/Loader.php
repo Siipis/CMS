@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Loader;
+namespace Siipis\CMS\Loader;
 
 use CMS_Parser as Parser;
 use Illuminate\Filesystem\Filesystem;

@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Node;
+namespace Siipis\CMS\Node;
 
 use CMS_Helper as Helper;
 

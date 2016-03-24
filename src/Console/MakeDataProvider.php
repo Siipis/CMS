@@ -1,6 +1,6 @@
 <?php
 
-namespace CMS\Console;
+namespace Siipis\CMS\Console;
 
 use Illuminate\Support\Composer;
 use Illuminate\Filesystem\Filesystem;

@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Facade;
+namespace Siipis\CMS\Facade;
 
 use Illuminate\Support\Facades\Facade;
 

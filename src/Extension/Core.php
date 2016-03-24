@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Extension;
+namespace Siipis\CMS\Extension;
 
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -14,12 +14,12 @@ class Core extends Twig_Extension
     public function getTokenParsers()
     {
         return [
-            new \CMS\Extension\Menu(),
-            new \CMS\Extension\Page(),
-            new \CMS\Extension\Partial(),
-            new \CMS\Extension\Title(),
+            new \Siipis\CMS\Extension\Menu(),
+            new \Siipis\CMS\Extension\Page(),
+            new \Siipis\CMS\Extension\Partial(),
+            new \Siipis\CMS\Extension\Title(),
 
-            new \CMS\Extension\OverrideExtends(),
+            new \Siipis\CMS\Extension\OverrideExtends(),
         ];
     }
 }

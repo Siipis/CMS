@@ -1,7 +1,7 @@
 <?php
 
 
-namespace CMS\Parser;
+namespace Siipis\CMS\Parser;
 
 
 class DataParser extends SubParser

@@ -1,5 +1,5 @@
 <?php
-namespace CMS\Exception;
+namespace Siipis\CMS\Exception;
 
 
 use Exception;
