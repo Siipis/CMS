@@ -1,13 +1,15 @@
 # CMS
 Content Management System built on Twig and Laravel
 
+Install using `composer require siipis/cms`
+
 # Usage
 ## Service provider & Facade
 Add the following lines in the `app.php` config file:
 
 Providers:
     
-    CMS\ServiceProvider::class,
+    Siipis\CMS\ServiceProvider::class,
     
 
 Aliases:
@@ -15,9 +17,9 @@ Aliases:
     'Twig'      => TwigBridge\Facade\Twig::class,
     'YAML'      => Symfony\Component\Yaml\Yaml::class,
      
-    'CMS'       => CMS\Facade\CMS::class,
-    'CMS_Helper'=> CMS\Facade\Scaffolding::class,
-    'CMS_Parser'=> CMS\Facade\Parser::class,
+    'CMS'       => Siipis\CMS\Facade\CMS::class,
+    'CMS_Helper'=> Siipis\CMS\Facade\Scaffolding::class,
+    'CMS_Parser'=> Siipis\CMS\Facade\Parser::class,
 
 ## Routing
 Add at the end of the `routes.php` file
