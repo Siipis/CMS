@@ -21,7 +21,10 @@
     "autoload": {
         "psr-4": {
             "Siipis\\CMS\\": "src"
-        }
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "minimum-stability": "dev"
 }
