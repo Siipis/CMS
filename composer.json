@@ -1,5 +1,5 @@
 {
-    "name": "siipis/CMS",
+    "name": "siipis/cms",
     "description": "Content Management System built on Twig and Laravel",
     "keywords": ["cms", "laravel", "twig"],
     "license": "MIT",
