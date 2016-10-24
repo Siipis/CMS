@@ -45,6 +45,8 @@ class ConfigParser extends SubParser
     {
         if ($this->parent->configHas('title')) {
             $this->parent->buffer('title', true);
+
+            $this->parent->setAttribute('title', $this->parent->getConfig('title'));
         }
 
         return $this;
