@@ -9,9 +9,10 @@
             "email": "siipis@live.co.uk"
         }
     ],
+    "version": "1.0.0",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*",
+        "laravel/framework": ">=5.2.*",
         "rcrowe/twigbridge": "^0.9.1"
     },
     "require-dev": {
