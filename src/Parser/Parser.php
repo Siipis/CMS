@@ -44,7 +44,7 @@ class Parser
 
     public function split($source)
     {
-        return explode('===', $source);
+        return explode('\n===\n', $source);
     }
 
     /*
